@@ -1,0 +1,51 @@
+BEGIN;
+BEGIN
+EXPLAIN (ANALYZE, BUFFERS)
+select
+	o_orderpriority,
+	count(*) as order_count
+from
+	orders
+where
+	o_orderdate >= date '1993-03-01'
+	and o_orderdate < cast(date '1993-03-01' + interval '3 month' as date)
+	and exists (
+		select
+			*
+		from
+			lineitem
+		where
+			l_orderkey = o_orderkey
+			and l_commitdate < l_receiptdate
+	)
+group by
+	o_orderpriority
+order by
+	o_orderpriority;
+                                                                                  QUERY PLAN                                                                                  
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=1139823.31..1139823.32 rows=1 width=16) (actual time=8763.939..8763.940 rows=5 loops=1)
+   Sort Key: orders.o_orderpriority
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=2532656 read=521132
+   ->  HashAggregate  (cost=1139823.29..1139823.30 rows=1 width=16) (actual time=8763.845..8763.847 rows=5 loops=1)
+         Group Key: orders.o_orderpriority
+         Buffers: shared hit=2532651 read=521132
+         ->  Nested Loop Semi Join  (cost=12038.57..1139048.50 rows=154958 width=16) (actual time=234.661..8500.531 rows=526653 loops=1)
+               Buffers: shared hit=2532651 read=521132
+               ->  Bitmap Heap Scan on orders  (cost=12038.01..274073.53 rows=567568 width=20) (actual time=234.497..1437.259 rows=573915 loops=1)
+                     Recheck Cond: ((o_orderdate >= '1993-03-01'::date) AND (o_orderdate < '1993-06-01'::date))
+                     Heap Blocks: exact=228234
+                     Buffers: shared hit=228234 read=1570
+                     ->  Bitmap Index Scan on orders_o_orderdate_o_orderkey_idx  (cost=0.00..11896.11 rows=567568 width=0) (actual time=162.757..162.757 rows=573915 loops=1)
+                           Index Cond: ((o_orderdate >= '1993-03-01'::date) AND (o_orderdate < '1993-06-01'::date))
+                           Buffers: shared read=1570
+               ->  Index Scan using lineitem_l_orderkey_idx_part1 on lineitem  (cost=0.56..4.57 rows=5 width=4) (actual time=0.011..0.011 rows=1 loops=573915)
+                     Index Cond: (l_orderkey = orders.o_orderkey)
+                     Buffers: shared hit=2304417 read=519562
+ Planning time: 4.181 ms
+ Execution time: 8765.334 ms
+(21 rows)
+
+COMMIT;
+COMMIT

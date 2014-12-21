@@ -1,0 +1,2224 @@
++ [ 5 -ne 5 ]
++ SCALE_FACTOR=10
++ stream_num=4
++ EXPLAIN_ANALYZE=1
++ OUTPUT_DIR=/home/sekondquad/dbt3-results/pghead-andres-9/throughput
++ SEED_FILE=/home/sekondquad/dbt3-results/pghead-andres-9/seed
++ PSQL=psql -v ON_ERROR_STOP=1 -X -e
++ RUNDIR=/home/sekondquad/dbt3-results/pghead-andres-9/throughput/run
++ RESULTSDIR=/home/sekondquad/dbt3-results/pghead-andres-9/throughput/results/4
++ mkdir -p /home/sekondquad/dbt3-results/pghead-andres-9/throughput/results/4
++ echo 12101
++ [ ! -f /home/sekondquad/dbt3-results/pghead-andres-9/seed ]
++ cat /home/sekondquad/dbt3-results/pghead-andres-9/seed
++ SEED=1105021247
++ SEED=1105021251
++ [ 1 -eq 1 ]
++ EXPLAIN_ARG=-y
++ PLANDIR=/home/sekondquad/dbt3-results/pghead-andres-9/throughput/plans/4
++ mkdir -p /home/sekondquad/dbt3-results/pghead-andres-9/throughput/plans/4
++ i=1
++ [ 1 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 1
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)5.sql	2.1.8.1
+-- TPC-H/TPC-R Local Supplier Volume Query (Q5)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	n_name,
+	sum(l_extendedprice * (1 - l_discount)) as revenue
+from
+	customer,
+	orders,
+	lineitem,
+	supplier,
+	nation,
+	region
+where
+	c_custkey = o_custkey
+	and l_orderkey = o_orderkey
+	and l_suppkey = s_suppkey
+	and c_nationkey = s_nationkey
+	and s_nationkey = n_nationkey
+	and n_regionkey = r_regionkey
+	and r_name = 'MIDDLE EAST'
+	and o_orderdate >= date '1996-01-01'
+	and o_orderdate < date '1996-01-01' + interval '1 year'
+group by
+	n_name
+order by
+	revenue desc;
+COMMIT;
++ sed -n+ r s/.*\(#\)([[:digit:]]+)\..*/\1/pecho -- using 1105021251 as a seed to the RNG -- @(#)5.sql 2.1.8.1 -- TPC-H/TPC-R Local Supplier Volume Query (Q5) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select n_name, sum(l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount)) as revenue from customer, orders, lineitem, supplier, nation, region where c_custkey = o_custkey and l_orderkey = o_orderkey and l_suppkey = s_suppkey and c_nationkey = s_nationkey and s_nationkey = n_nationkey and n_regionkey = r_regionkey and r_name = 'MIDDLE EAST' and o_orderdate >= date '1996-01-01' and o_orderdate < date '1996-01-01' + interval '1 year' group by n_name order by revenue desc; COMMIT;
++ N=5
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=2
++ [ 2 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 2
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)21.sql	2.1.8.1
+-- TPC-H/TPC-R Suppliers Who Kept Orders Waiting Query (Q21)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	s_name,
+	count(*) as numwait
+from
+	supplier,
+	lineitem l1,
+	orders,
+	nation
+where
+	s_suppkey = l1.l_suppkey
+	and o_orderkey = l1.l_orderkey
+	and o_orderstatus = 'F'
+	and l1.l_receiptdate > l1.l_commitdate
+	and exists (
+		select
+			*
+		from
+			lineitem l2
+		where
+			l2.l_orderkey = l1.l_orderkey
+			and l2.l_suppkey <> l1.l_suppkey
+	)
+	and not exists (
+		select
+			*
+		from
+			lineitem l3
+		where
+			l3.l_orderkey = l1.l_orderkey
+			and l3.l_suppkey <> l1.l_suppkey
+			and l3.l_receiptdate > l3.l_commitdate
+	)
+	and s_nationkey = n_nationkey
+	and n_name = 'ROMANIA'
+group by
+	s_name
+order by
+	numwait desc,
+	s_name
+LIMIT 100;
+COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ echo -- using 1105021251 as a seed to the RNG -- @(#)21.sql 2.1.8.1 -- TPC-H/TPC-R Suppliers Who Kept Orders Waiting Query (Q21) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select s_name, count(*) as numwait from supplier, lineitem l1, orders, nation where s_suppkey = l1.l_suppkey and o_orderkey = l1.l_orderkey and o_orderstatus = 'F' and l1.l_receiptdate > l1.l_commitdate and exists ( select andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 from lineitem l2 where l2.l_orderkey = l1.l_orderkey and l2.l_suppkey <> l1.l_suppkey ) and not exists ( select andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 from lineitem l3 where l3.l_orderkey = l1.l_orderkey and l3.l_suppkey <> l1.l_suppkey and l3.l_receiptdate > l3.l_commitdate ) and s_nationkey = n_nationkey and n_name = 'ROMANIA' group by s_name order by numwait desc, s_name LIMIT 100; COMMIT;
++ N=21
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=3
++ [ 3 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 3
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)14.sql	2.1.8.1
+-- TPC-H/TPC-R Promotion Effect Query (Q14)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	100.00 * sum(case
+		when p_type like 'PROMO%'
+			then l_extendedprice * (1 - l_discount)
+		else 0
+	end) / sum(l_extendedprice * (1 - l_discount)) as promo_revenue
+from
+	lineitem,
+	part
+where
+	l_partkey = p_partkey
+	and l_shipdate >= date '1997-03-01'
+	and l_shipdate < cast(date '1997-03-01' + interval '1 month' as date);
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)14.sql 2.1.8.1 -- TPC-H/TPC-R Promotion Effect Query (Q14) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select 100.00 andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 sum(case when p_type like 'PROMO%' then l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount) else 0 end) / sum(l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount)) as promo_revenue from lineitem, part where l_partkey = p_partkey and l_shipdate >= date '1997-03-01' and l_shipdate < cast(date '1997-03-01' + interval '1 month' as date); COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ N=14
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=4
++ [ 4 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 4
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)19.sql	2.1.8.1
+-- TPC-H/TPC-R Discounted Revenue Query (Q19)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	sum(l_extendedprice* (1 - l_discount)) as revenue
+from
+	lineitem,
+	part
+where
+	(
+		p_partkey = l_partkey
+		and p_brand = 'Brand#54'
+		and p_container in ('SM CASE', 'SM BOX', 'SM PACK', 'SM PKG')
+		and l_quantity >= 10 and l_quantity <= 10+10
+		and p_size between 1 and 5
+		and l_shipmode in ('AIR', 'AIR REG')
+		and l_shipinstruct = 'DELIVER IN PERSON'
+	)
+	or
+	(
+		p_partkey = l_partkey
+		and p_brand = 'Brand#44'
+		and p_container in ('MED BAG', 'MED BOX', 'MED PKG', 'MED PACK')
+		and l_quantity >= 16 and l_quantity <= 16+10
+		and p_size between 1 and 10
+		and l_shipmode in ('AIR', 'AIR REG')
+		and l_shipinstruct = 'DELIVER IN PERSON'
+	)
+	or
+	(
+		p_partkey = l_partkey
+		and p_brand = 'Brand#25'
+		and p_container in ('LG CASE', 'LG BOX', 'LG PACK', 'LG PKG')
+		and l_quantity >= 28 and l_quantity <= 28+10
+		and p_size between 1 and 15
+		and l_shipmode in ('AIR', 'AIR REG')
+		and l_shipinstruct = 'DELIVER IN PERSON'
+	);
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)19.sql 2.1.8.1 -- TPC-H/TPC-R Discounted Revenue Query (Q19)+ - Functional Query Definition -- Ap -n -r s/.*\(#\)([[: BEGIN; EXPLAIN select sum(l_extendedprice* (1 - l_discount)) as revenue from lineitem, part where ( p_partkey = l_partkey and p_brand = 'Brand#54' and p_container in ('SM CASE', 'SM BOX', 'SM PACK', 'SM PKG') and l_quantity >= 10 and l_quantity <= 10+10 and p_size between 1 and 5 and l_shipmode in ('AIR', 'AIR REG') and l_shipinstruct = 'DELIVER IN PERSON' ) or ( p_partkey = l_partkey and p_brand = 'Brand#44' and p_container in ('MED BAG', 'MED BOX', 'MED PKG', 'MED PACK') and l_quantity >= 16 and l_quantity <= 16+10 and p_size between 1 and 10 and l_shipmode in ('AIR', 'AIR REG') and l_shipinstruct = 'DELIVER IN PERSON' ) or ( p_partkey = l_partkey and p_brand = 'Brand#25' and p_container in ('LG CASE', 'LG BOX', 'LG PACK', 'LG PKG') and l_quantity >= 28 and l_quantity <= 28+10 and p_size between 1 and 15 and l_shipmode in ('AIR', 'AIR REG') and l_shipinstruct = 'DELIVER IN PERSON' ); COMMIT;
++ N=19
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=5
++ [ 5 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 5
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)15.sql	2.1.8.1
+-- TPC-H/TPC-R Top Supplier Query (Q15)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+create or replace view revenue4 (supplier_no, total_revenue) as
+	select
+		l_suppkey,
+		sum(l_extendedprice * (1 - l_discount))
+	from
+		lineitem
+	where
+		l_shipdate >= '1994-06-01'
+		and l_shipdate < date'1994-06-01' + interval '90 days'
+	group by
+		l_suppkey;
+
+EXPLAIN
+
+
+select
+	s_suppkey,
+	s_name,
+	s_address,
+	s_phone,
+	total_revenue
+from
+	supplier,
+	revenue4
+where
+	s_suppkey = supplier_no
+	and total_revenue = (
+		select
+			max(total_revenue)
+		from
+			revenue4
+	)
+order by
+	s_suppkey;
+
+drop view revenue4;
+COMMIT;
++ + sed -n -r s/. -- using 1105021251 as a seed to the RNG -- @(#)15.sql 2.1.8.1 -- TPC-H/TPC-R Top Supplier Query (Q15) -- Functional Query Definition -- Approved February 1998 BEGIN; create or replace view revenue4 (supplier_no, total_revenue) as select l_suppkey, sum(l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount)) from lineitem where l_shipdate >= '1994-06-01' and l_shipdate < date'1994-06-01' + interval '90 days' group by l_suppkey; EXPLAIN select s_suppkey, s_name, s_address, s_phone, total_revenue from supplier, revenue4 where s_suppkey = supplier_no and total_revenue = ( select max(total_revenue) from revenue4 ) order by s_suppkey; drop view revenue4; COMMIT;
++ N=15
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=6
++ [ 6 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 6
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)17.sql	2.1.8.1
+-- TPC-H/TPC-R Small-Quantity-Order Revenue Query (Q17)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	sum(l_extendedprice) / 7.0 as avg_yearly
+from
+	lineitem,
+	part
+where
+	p_partkey = l_partkey
+	and p_brand = 'Brand#21'
+	and p_container = 'WRAP PACK'
+	and l_quantity < (
+		select
+			0.2 * avg(l_quantity)
+		from
+			lineitem
+		where
+			l_partkey = p_partkey
+	);
+COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ echo -- using 1105021251 as a seed to the RNG -- @(#)17.sql 2.1.8.1 -- TPC-H/TPC-R Small-Quantity-Order Revenue Query (Q17) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select sum(l_extendedprice) / 7.0 as avg_yearly from lineitem, part where p_partkey = l_partkey and p_brand = 'Brand#21' and p_container = 'WRAP PACK' and l_quantity < ( select 0.2 andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 avg(l_quantity) from lineitem where l_partkey = p_partkey ); COMMIT;
++ N=17
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=7
++ [ 7 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 7
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)12.sql	2.1.8.1
+-- TPC-H/TPC-R Shipping Modes and Order Priority Query (Q12)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	l_shipmode,
+	sum(case
+		when o_orderpriority = '1-URGENT'
+			or o_orderpriority = '2-HIGH'
+			then 1
+		else 0
+	end) as high_line_count,
+	sum(case
+		when o_orderpriority <> '1-URGENT'
+			and o_orderpriority <> '2-HIGH'
+			then 1
+		else 0
+	end) as low_line_count
+from
+	orders,
+	lineitem
+where
+	o_orderkey = l_orderkey
+	and l_shipmode in ('RAIL', 'FOB')
+	and l_commitdate < l_receiptdate
+	and l_shipdate < l_commitdate
+	and l_receiptdate >= date '1997-01-01'
+	and l_receiptdate < date '1997-01-01' + interval '1 year'
+group by
+	l_shipmode
+order by
+	l_shipmode;
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)12.sql 2.1.8.1 -- TPC-H/TPC-R Shipping Modes and Order Priority Query (Q12) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select l_shipmode, sum(case when o_orderpriority = '1-URGENT' or o_orderpriority = '2-HIGH' then 1 else 0 end) as high_line_count, sum(case when o_orderpriority <> '1-URGENT' and o_orderpriority <> '2-HIGH' then 1 else 0 end) as low_line_count from orders, lineitem where o_orderkey = l_orderkey and l_shipmode in ('RAIL', 'FOB') and l_commitdate < l_receiptdate and l_shipdate < l_commitdate and l_receiptdate >= date '1997-01-01' and l_receiptdate < date '1997-01-01' + interval '1 year' group by l_shipmode order by l_shipmode; COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ N=12
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=8
++ [ 8 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 8
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)6.sql	2.1.8.1
+-- TPC-H/TPC-R Forecasting Revenue Change Query (Q6)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	sum(l_extendedprice * l_discount) as revenue
+from
+	lineitem
+where
+	l_shipdate >= date '1996-01-01'
+	and l_shipdate < cast(date '1996-01-01' + interval '1 year' as date)
+	and l_discount between 0.07 - 0.01 and 0.07 + 0.01
+	and l_quantity < 24;
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)6.sql 2.1.8.1 -- TPC-H/TPC-R Forecasting Revenue Change Query (Q6) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select sum(l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 l_discount) as revenue from lineitem where l_shipdate >= date '1996-01-01' and l_shipdate < cast(date '1996-01-01' + interval '1 year' as date) and l_discount between 0.07 - 0.01 and 0.07 + 0.01 and l_quantity < 24; COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ N=6
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=9
++ [ 9 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 9
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)4.sql	2.1.8.1
+-- TPC-H/TPC-R Order Priority Checking Query (Q4)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	o_orderpriority,
+	count(*) as order_count
+from
+	orders
+where
+	o_orderdate >= date '1993-11-01'
+	and o_orderdate < cast(date '1993-11-01' + interval '3 month' as date)
+	and exists (
+		select
+			*
+		from
+			lineitem
+		where
+			l_orderkey = o_orderkey
+			and l_commitdate < l_receiptdate
+	)
+group by
+	o_orderpriority
+order by
+	o_orderpriority;
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)4.sql 2.1.8.1 -- TPC-H/TPC-R Order Priority Checking Query (Q4) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select o_orderpriority, count(*) as order_count from orders where o_orderdate >= date '1993-11-01' and o_orderdate < cast(date '1993-11-01' + interval '3 month' as date) and exists ( select andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3+ tree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1sedree_30G_2 btree_30G_3 bt -r_30G_4 btree_30G_5 s/.*\(#\)([ btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 from lineitem where l_orderkey = o_orderkey and l_commitdate < l_receiptdate ) group by o_orderpriority order by o_orderpriority; COMMIT;
++ N=4
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=10
++ [ 10 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 10
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)9.sql	2.1.8.1
+-- TPC-H/TPC-R Product Type Profit Measure Query (Q9)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	nation,
+	o_year,
+	sum(amount) as sum_profit
+from
+	(
+		select
+			n_name as nation,
+			extract(year from o_orderdate) as o_year,
+			l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity as amount
+		from
+			part,
+			supplier,
+			lineitem,
+			partsupp,
+			orders,
+			nation
+		where
+			s_suppkey = l_suppkey
+			and ps_suppkey = l_suppkey
+			and ps_partkey = l_partkey
+			and p_partkey = l_partkey
+			and o_orderkey = l_orderkey
+			and s_nationkey = n_nationkey
+			and p_name like '%chocolate%'
+	) as profit
+group by
+	nation,
+	o_year
+order by
+	nation,
+	o_year desc;
+COMMIT;
++ echo+ - using 1105021251sed -  -r s/. the RNG -- @(#)9.sql 2.1.8.1 -- TPC-H/TPC-R Product Type Profit Measure Query (Q9) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select nation, o_year, sum(amount) as sum_profit from ( select n_name as nation, extract(year from o_orderdate) as o_year, l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount) - ps_supplycost andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 l_quantity as amount from part, supplier, lineitem, partsupp, orders, nation where s_suppkey = l_suppkey and ps_suppkey = l_suppkey and ps_partkey = l_partkey and p_partkey = l_partkey and o_orderkey = l_orderkey and s_nationkey = n_nationkey and p_name like '%chocolate%' ) as profit group by nation, o_year order by nation, o_year desc; COMMIT;
++ N=9
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=11
++ [ 11 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 11
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)8.sql	2.1.8.1
+-- TPC-H/TPC-R National Market Share Query (Q8)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	o_year,
+	sum(case
+		when nation = 'EGYPT' then volume
+		else 0
+	end) / sum(volume) as mkt_share
+from
+	(
+		select
+			extract(year from o_orderdate) as o_year,
+			l_extendedprice * (1 - l_discount) as volume,
+			n2.n_name as nation
+		from
+			part,
+			supplier,
+			lineitem,
+			orders,
+			customer,
+			nation n1,
+			nation n2,
+			region
+		where
+			p_partkey = l_partkey
+			and s_suppkey = l_suppkey
+			and l_orderkey = o_orderkey
+			and o_custkey = c_custkey
+			and c_nationkey = n1.n_nationkey
+			and n1.n_regionkey = r_regionkey
+			and r_name = 'MIDDLE EAST'
+			and s_nationkey = n2.n_nationkey
+			and o_orderdate between date '1995-01-01' and date '1996-12-31'
+			and p_type = 'SMALL ANODIZED NICKEL'
+	) as all_nations
+group by
+	o_year
+order by
+	o_year;
+COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ echo -- using 1105021251 as a seed to the RNG -- @(#)8.sql 2.1.8.1 -- TPC-H/TPC-R National Market Share Query (Q8) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select o_year, sum(case when nation = 'EGYPT' then volume else 0 end) / sum(volume) as mkt_share from ( select extract(year from o_orderdate) as o_year, l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount) as volume, n2.n_name as nation from part, supplier, lineitem, orders, customer, nation n1, nation n2, region where p_partkey = l_partkey and s_suppkey = l_suppkey and l_orderkey = o_orderkey and o_custkey = c_custkey and c_nationkey = n1.n_nationkey and n1.n_regionkey = r_regionkey and r_name = 'MIDDLE EAST' and s_nationkey = n2.n_nationkey and o_orderdate between date '1995-01-01' and date '1996-12-31' and p_type = 'SMALL ANODIZED NICKEL' ) as all_nations group by o_year order by o_year; COMMIT;
++ N=8
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=12
++ [ 12 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 12
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)16.sql	2.1.8.1
+-- TPC-H/TPC-R Parts/Supplier Relationship Query (Q16)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	p_brand,
+	p_type,
+	p_size,
+	count(distinct ps_suppkey) as supplier_cnt
+from
+	partsupp,
+	part
+where
+	p_partkey = ps_partkey
+	and p_brand <> 'Brand#12'
+	and p_type not like 'STANDARD BURNISHED%'
+	and p_size in (47, 39, 2, 36, 22, 46, 50, 35)
+	and ps_suppkey not in (
+		select
+			s_suppkey
+		from
+			supplier
+		where
+			s_comment like '%Customer%Complaints%'
+	)
+group by
+	p_brand,
+	p_type,
+	p_size
+order by
+	supplier_cnt desc,
+	p_brand,
+	p_type,
+	p_size;
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)16.sql 2.1.8.1 -- TPC-H/TPC-R Parts/Supplier Relationship Query (Q16) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select p_brand, p_type,+ _size, count(distinct ps_suppkey) as supplier_cntsed -n -rtsupp, part where s/.*\(#\) = ps_partkey and p_brand <> 'Brand#12' and p_type not like 'STANDARD BURNISHED%' and p_size in (47, 39, 2, 36, 22, 46, 50, 35) and ps_suppkey not in ( select s_suppkey from supplier where s_comment like '%Customer%Complaints%' ) group by p_brand, p_type, p_size order by supplier_cnt desc, p_brand, p_type, p_size; COMMIT;
++ N=16
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=13
++ [ 13 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 13
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)11.sql	2.1.8.1
+-- TPC-H/TPC-R Important Stock Identification Query (Q11)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	ps_partkey,
+	sum(ps_supplycost * ps_availqty) as value
+from
+	partsupp,
+	supplier,
+	nation
+where
+	ps_suppkey = s_suppkey
+	and s_nationkey = n_nationkey
+	and n_name = 'FRANCE'
+group by
+	ps_partkey having
+		sum(ps_supplycost * ps_availqty) > (
+			select
+				sum(ps_supplycost * ps_availqty) * 0.0000100000
+			from
+				partsupp,
+				supplier,
+				nation
+			where
+				ps_suppkey = s_suppkey
+				and s_nationkey = n_nationkey
+				and n_name = 'FRANCE'
+		)
+order by
+	value desc;
+COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ echo -- using 1105021251 as a seed to the RNG -- @(#)11.sql 2.1.8.1 -- TPC-H/TPC-R Important Stock Identification Query (Q11) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select ps_partkey, sum(ps_supplycost andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 ps_availqty) as value from partsupp, supplier, nation where ps_suppkey = s_suppkey and s_nationkey = n_nationkey and n_name = 'FRANCE' group by ps_partkey having sum(ps_supplycost andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 ps_availqty) > ( select sum(ps_supplycost andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 ps_availqty) andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 0.0000100000 from partsupp, supplier, nation where ps_suppkey = s_suppkey and s_nationkey = n_nationkey and n_name = 'FRANCE' ) order by value desc; COMMIT;
++ N=11
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=14
++ [ 14 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 14
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)2.sql	2.1.8.2
+-- TPC-H/TPC-R Minimum Cost Supplier Query (Q2)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	s_acctbal,
+	s_name,
+	n_name,
+	p_partkey,
+	p_mfgr,
+	s_address,
+	s_phone,
+	s_comment
+from
+	part,
+	supplier,
+	partsupp,
+	nation,
+	region
+where
+	p_partkey = ps_partkey
+	and s_suppkey = ps_suppkey
+	and p_size = 20
+	and p_type like '%BRASS'
+	and s_nationkey = n_nationkey
+	and n_regionkey = r_regionkey
+	and r_name = 'AFRICA'
+	and ps_supplycost = (
+		select
+			min(ps_supplycost)
+		from
+			partsupp,
+			supplier,
+			nation,
+			region
+		where
+			p_partkey = ps_partkey
+			and s_suppkey = ps_suppkey
+			and s_nationkey = n_nationkey
+			and n_regionkey = r_regionkey
+			and r_name = 'AFRICA'
+	)
+order by
+	s_acctbal desc,
+	n_name,
+	s_name,
+	p_partkey
+LIMIT 100;
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)2.sql 2.1.8.2 -- TPC-H/TPC-R Minimum Cost Supplier Query (Q2) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select s_acctbal, s_name, n_name, p_partkey, p_mfgr, s_address,+ _phone, s_comment from part, supplier,sed -n -r s/.*\(#\)([[:digit:]] p_partkey = ps_partkey and s_suppkey = ps_suppkey and p_size = 20 and p_type like '%BRASS' and s_nationkey = n_nationkey and n_regionkey = r_regionkey and r_name = 'AFRICA' and ps_supplycost = ( select min(ps_supplycost) from partsupp, supplier, nation, region where p_partkey = ps_partkey and s_suppkey = ps_suppkey and s_nationkey = n_nationkey and n_regionkey = r_regionkey and r_name = 'AFRICA' ) order by s_acctbal desc, n_name, s_name, p_partkey LIMIT 100; COMMIT;
++ N=2
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=15
++ [ 15 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 15
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)10.sql	2.1.8.1
+-- TPC-H/TPC-R Returned Item Reporting Query (Q10)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	c_custkey,
+	c_name,
+	sum(l_extendedprice * (1 - l_discount)) as revenue,
+	c_acctbal,
+	n_name,
+	c_address,
+	c_phone,
+	c_comment
+from
+	customer,
+	orders,
+	lineitem,
+	nation
+where
+	c_custkey = o_custkey
+	and l_orderkey = o_orderkey
+	and o_orderdate >= date '1993-12-01'
+	and o_orderdate < cast(date '1993-12-01' + interval '3 month' as date)
+	and l_returnflag = 'R'
+	and c_nationkey = n_nationkey
+group by
+	c_custkey,
+	c_name,
+	c_acctbal,
+	c_phone,
+	n_name,
+	c_address,
+	c_comment
+order by
+	revenue desc
+LIMIT 20;
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)10.sql 2.1.8.1 -- TPC-H/TPC-R Returned Item Reporting Query (Q10) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select c_custkey, c_name, sum(l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3+ tree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 bt -n -r s/.*\(#\)([[:digit:]]+) hash-bas
+line hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount)) as revenue, c_acctbal, n_name, c_address, c_phone, c_comment from customer, orders, lineitem, nation where c_custkey = o_custkey and l_orderkey = o_orderkey and o_orderdate >= date '1993-12-01' and o_orderdate < cast(date '1993-12-01' + interval '3 month' as date) and l_returnflag = 'R' and c_nationkey = n_nationkey group by c_custkey, c_name, c_acctbal, c_phone, n_name, c_address, c_comment order by revenue desc LIMIT 20; COMMIT;
++ N=10
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=16
++ [ 16 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 16
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)18.sql	2.1.8.1
+-- TPC-H/TPC-R Large Volume Customer Query (Q18)
+-- Function Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	c_name,
+	c_custkey,
+	o_orderkey,
+	o_orderdate,
+	o_totalprice,
+	sum(l_quantity)
+from
+	customer,
+	orders,
+	lineitem
+where
+	o_orderkey in (
+		select
+			l_orderkey
+		from
+			lineitem
+		group by
+			l_orderkey having
+				sum(l_quantity) > 312
+	)
+	and c_custkey = o_custkey
+	and o_orderkey = l_orderkey
+group by
+	c_name,
+	c_custkey,
+	o_orderkey,
+	o_orderdate,
+	o_totalprice
+order by
+	o_totalprice desc,
+	o_orderdate
+LIMIT 100;
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)18.sql 2.1.8.1 -- TPC-H/TPC-R Large Volume Customer Query (Q18) -- Function Query Definition -- Approved February 1998 BEGIN; EXPLAIN select c_name, c_custkey, o_orderkey, o_orderdate, o_totalprice, sum(l_quantity) from customer, orders, lineitem where o_orderkey+ n ( select l_orderkey from lineitemsed -n -r s/.*\(#\)([[:digi sum(l_quantity
+ > 312 ) and c_custkey = o_custkey and o_orderkey = l_orderkey group by c_name, c_custkey, o_orderkey, o_orderdate, o_totalprice order by o_totalprice desc, o_orderdate LIMIT 100; COMMIT;
++ N=18
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=17
++ [ 17 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 17
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)1.sql	2.1.8.1
+-- TPC-H/TPC-R Pricing Summary Report Query (Q1)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	l_returnflag,
+	l_linestatus,
+	sum(l_quantity) as sum_qty,
+	sum(l_extendedprice) as sum_base_price,
+	sum(l_extendedprice * (1 - l_discount)) as sum_disc_price,
+	sum(l_extendedprice * (1 - l_discount) * (1 + l_tax)) as sum_charge,
+	avg(l_quantity) as avg_qty,
+	avg(l_extendedprice) as avg_price,
+	avg(l_discount) as avg_disc,
+	count(*) as count_order
+from
+	lineitem
+where
+	l_shipdate <= date '1998-12-01' - interval '72 days'
+group by
+	l_returnflag,
+	l_linestatus
+order by
+	l_returnflag,
+	l_linestatus;
+COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ echo -- using 1105021251 as a seed to the RNG -- @(#)1.sql 2.1.8.1 -- TPC-H/TPC-R Pricing Summary Report Query (Q1) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select l_returnflag, l_linestatus, sum(l_quantity) as sum_qty, sum(l_extendedprice) as sum_base_price, sum(l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount)) as sum_disc_price, sum(l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount) andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 + l_tax)) as sum_charge, avg(l_quantity) as avg_qty, avg(l_extendedprice) as avg_price, avg(l_discount) as avg_disc, count(*) as count_order from lineitem where l_shipdate <= date '1998-12-01' - interval '72 days' group by l_returnflag, l_linestatus order by l_returnflag, l_linestatus; COMMIT;
++ N=1
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=18
++ [ 18 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 18
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)13.sql	2.1.8.1
+-- TPC-H/TPC-R Customer Distribution Query (Q13)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	c_count,
+	count(*) as custdist
+from
+	(
+		select
+			c_custkey,
+			count(o_orderkey)
+		from
+			customer left outer join orders on
+				c_custkey = o_custkey
+				and o_comment not like '%express%deposits%'
+		group by
+			c_custkey
+	) as c_orders (c_custkey, c_count)
+group by
+	c_count
+order by
+	custdist desc,
+	c_count desc;
+COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ echo -- using 1105021251 as a seed to the RNG -- @(#)13.sql 2.1.8.1 -- TPC-H/TPC-R Customer Distribution Query (Q13) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select c_count, count(*) as custdist from ( select c_custkey, count(o_orderkey) from customer left outer join orders on c_custkey = o_custkey and o_comment not like '%express%deposits%' group by c_custkey ) as c_orders (c_custkey, c_count) group by c_count order by custdist desc, c_count desc; COMMIT;
++ N=13
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=19
++ [ 19 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 19
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)7.sql	2.1.8.1
+-- TPC-H/TPC-R Volume Shipping Query (Q7)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	supp_nation,
+	cust_nation,
+	l_year,
+	sum(volume) as revenue
+from
+	(
+		select
+			n1.n_name as supp_nation,
+			n2.n_name as cust_nation,
+			extract(year from l_shipdate) as l_year,
+			l_extendedprice * (1 - l_discount) as volume
+		from
+			supplier,
+			lineitem,
+			orders,
+			customer,
+			nation n1,
+			nation n2
+		where
+			s_suppkey = l_suppkey
+			and o_orderkey = l_orderkey
+			and c_custkey = o_custkey
+			and s_nationkey = n1.n_nationkey
+			and c_nationkey = n2.n_nationkey
+			and (
+				(n1.n_name = 'PERU' and n2.n_name = 'EGYPT')
+				or (n1.n_name = 'EGYPT' and n2.n_name = 'PERU')
+			)
+			and l_shipdate between date '1995-01-01' and date '1996-12-31'
+	) as shipping
+group by
+	supp_nation,
+	cust_nation,
+	l_year
+order by
+	supp_nation,
+	cust_nation,
+	l_year;
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)7.sql 2.1.8.1 -- TPC-H/TPC-R Volume Shipping Query (Q7) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select supp_nation, cust_nation, l_year, sum(volume) as revenue from ( select n1.n_name as supp_nation, n2.n_name as cust_nation, extract(year from l_shipdate) as l_year, l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount) as volume from supplier, lineitem, orders, customer, nation n1, nation n2 where s_suppkey = l_suppkey and o_orderkey = l_orderkey and c_custkey = o_custkey+ nd s_nationkeyse  -n -r s/.*\(#\)([ = n2.n_nationkey and ( (n1.n_name = 'PERU' and n2.n_name = 'EGYPT') or (n1.n_name = 'EGYPT' and n2.n_name = 'PERU') ) and l_shipdate between date '1995-01-01' and date '1996-12-31' ) as shipping group by supp_nation, cust_nation, l_year order by supp_nation, cust_nation, l_year; COMMIT;
++ N=7
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=20
++ [ 20 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 20
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)22.sql	2.1.8.1
+-- TPC-H/TPC-R Global Sales Opportunity Query (Q22)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	cntrycode,
+	count(*) as numcust,
+	sum(c_acctbal) as totacctbal
+from
+	(
+		select
+			substr(c_phone, 1, 2) as cntrycode,
+			c_acctbal
+		from
+			customer
+		where
+			substr(c_phone, 1, 2) in
+				('27', '20', '32', '34', '10', '30', '29')
+			and c_acctbal > (
+				select
+					avg(c_acctbal)
+				from
+					customer
+				where
+					c_acctbal > 0.00
+					and substr(c_phone, 1, 2) in
+						('27', '20', '32', '34', '10', '30', '29')
+			)
+			and not exists (
+				select
+					*
+				from
+					orders
+				where
+					o_custkey = c_custkey
+			)
+	) as vip
+group by
+	cntrycode
+order by
+	cntrycode;
+COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ echo -- using 1105021251 as a seed to the RNG -- @(#)22.sql 2.1.8.1 -- TPC-H/TPC-R Global Sales Opportunity Query (Q22) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select cntrycode, count(*) as numcust, sum(c_acctbal) as totacctbal from ( select substr(c_phone, 1, 2) as cntrycode, c_acctbal from customer where substr(c_phone, 1, 2) in ('27', '20', '32', '34', '10', '30', '29') and c_acctbal > ( select avg(c_acctbal) from customer where c_acctbal > 0.00 and substr(c_phone, 1, 2) in ('27', '20', '32', '34', '10', '30', '29') ) and not exists ( select andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 from orders where o_custkey = c_custkey ) ) as vip group by cntrycode order by cntrycode; COMMIT;
++ N=22
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=21
++ [ 21 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 21
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)3.sql	2.1.8.1
+-- TPC-H/TPC-R Shipping Priority Query (Q3)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	l_orderkey,
+	sum(l_extendedprice * (1 - l_discount)) as revenue,
+	o_orderdate,
+	o_shippriority
+from
+	customer,
+	orders,
+	lineitem
+where
+	c_mktsegment = 'FURNITURE'
+	and c_custkey = o_custkey
+	and l_orderkey = o_orderkey
+	and o_orderdate < date '1995-03-06'
+	and l_shipdate > date '1995-03-06'
+group by
+	l_orderkey,
+	o_orderdate,
+	o_shippriority
+order by
+	revenue desc,
+	o_orderdate
+LIMIT 10;
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)3.sql 2.1.8.1 -- TPC-H/TPC-R Shipping Priority Query (Q3) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN select l_orderkey, sum(l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2+ rinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1sed -n -rtree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount)) as revenue, o_orderdate, o_shippriority from customer, orders, lineitem where c_mktsegment = 'FURNITURE' and c_custkey = o_custkey and l_orderkey = o_orderkey and o_orderdate < date '1995-03-06' and l_shipdate > date '1995-03-06' group by l_orderkey, o_orderdate, o_shippriority order by revenue desc, o_orderdate LIMIT 10; COMMIT;
++ N=3
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=22
++ [ 22 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -x 22
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)20.sql	2.1.8.1
+-- TPC-H/TPC-R Potential Part Promotion Query (Q20)
+-- Function Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN
+
+
+select
+	s_name,
+	s_address
+from
+	supplier,
+	nation
+where
+	s_suppkey in (
+		select
+			distinct (ps_suppkey)
+		from
+			partsupp,
+			part
+		where
+			ps_partkey=p_partkey
+			and p_name like 'rose%'
+			and ps_availqty > (
+				select
+					0.5 * sum(l_quantity)
+				from
+					lineitem
+				where
+					l_partkey = ps_partkey
+					and l_suppkey = ps_suppkey
+					and l_shipdate >= '1996-01-01'
+					and l_shipdate < cast(date '1996-01-01' + interval '1 year' as date)
+			)
+	)
+	and s_nationkey = n_nationkey
+	and n_name = 'PERU'
+order by
+	s_name;
+COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ echo -- using 1105021251 as a seed to the RNG -- @(#)20.sql 2.1.8.1 -- TPC-H/TPC-R Potential Part Promotion Query (Q20) -- Function Query Definition -- Approved February 1998 BEGIN; EXPLAIN select s_name, s_address from supplier, nation where s_suppkey in ( select distinct (ps_suppkey) from partsupp, part where ps_partkey=p_partkey and p_name like 'rose%' and ps_availqty > ( select 0.5 andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 sum(l_quantity) from lineitem where l_partkey = ps_partkey and l_suppkey = ps_suppkey and l_shipdate >= '1996-01-01' and l_shipdate < cast(date '1996-01-01' + interval '1 year' as date) ) ) and s_nationkey = n_nationkey and n_name = 'PERU' order by s_name; COMMIT;
++ N=20
++ psql -v ON_ERROR_STOP=1 -X -e
++ i=23
++ [ 23 -le 22 ]
++ date
++ echo Wed Nov  5 02:33:10 UTC 2014: start throughput queriy stream 4 
+Wed Nov  5 02:33:10 UTC 2014: start throughput queriy stream 4 
++ date +%s
++ s_time=1415154790
++ STREAMTASK=PERF.THRUPUT.QS4.ALL
++ record_start PERF.THRUPUT.QS4.ALL
++ NAME=PERF.THRUPUT.QS4.ALL
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=1
++ [ 1 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 1
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)5.sql	2.1.8.1
+-- TPC-H/TPC-R Local Supplier Volume Query (Q5)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	n_name,
+	sum(l_extendedprice * (1 - l_discount)) as revenue
+from
+	customer,
+	orders,
+	lineitem,
+	supplier,
+	nation,
+	region
+where
+	c_custkey = o_custkey
+	and l_orderkey = o_orderkey
+	and l_suppkey = s_suppkey
+	and c_nationkey = s_nationkey
+	and s_nationkey = n_nationkey
+	and n_regionkey = r_regionkey
+	and r_name = 'MIDDLE EAST'
+	and o_orderdate >= date '1996-01-01'
+	and o_orderdate < date '1996-01-01' + interval '1 year'
+group by
+	n_name
+order by
+	revenue desc;
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG+ - @(#)5.sql 2.1.8.1 -- TPC-H/TPC-R Local Supplier Volume Query (Q -  - Functional s/.*\ Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select n_name, sum(l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount)) as revenue from customer, orders, lineitem, supplier, nation, region where c_custkey = o_custkey and l_orderkey = o_orderkey and l_suppkey = s_suppkey and c_nationkey = s_nationkey and s_nationkey = n_nationkey and n_regionkey = r_regionkey and r_name = 'MIDDLE EAST' and o_orderdate >= date '1996-01-01' and o_orderdate < date '1996-01-01' + interval '1 year' group by n_name order by revenue desc; COMMIT;
++ N=5
++ TASK=PERF.THRUPUT.QS4.Q5
++ record_start PERF.THRUPUT.QS4.Q5
++ NAME=PERF.THRUPUT.QS4.Q5
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q5
++ NAME=PERF.THRUPUT.QS4.Q5
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=2
++ [ 2 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 2
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)21.sql	2.1.8.1
+-- TPC-H/TPC-R Suppliers Who Kept Orders Waiting Query (Q21)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	s_name,
+	count(*) as numwait
+from
+	supplier,
+	lineitem l1,
+	orders,
+	nation
+where
+	s_suppkey = l1.l_suppkey
+	and o_orderkey = l1.l_orderkey
+	and o_orderstatus = 'F'
+	and l1.l_receiptdate > l1.l_commitdate
+	and exists (
+		select
+			*
+		from
+			lineitem l2
+		where
+			l2.l_orderkey = l1.l_orderkey
+			and l2.l_suppkey <> l1.l_suppkey
+	)
+	and not exists (
+		select
+			*
+		from
+			lineitem l3
+		where
+			l3.l_orderkey = l1.l_orderkey
+			and l3.l_suppkey <> l1.l_suppkey
+			and l3.l_receiptdate > l3.l_commitdate
+	)
+	and s_nationkey = n_nationkey
+	and n_name = 'ROMANIA'
+group by
+	s_name
+order by
+	numwait desc,
+	s_name
+LIMIT 100;
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)21.sql 2.1.8.1 -- TPC-H/TPC-R Suppliers Who Kept Orders Waiting Query (Q21) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select s_name, count(*) as numwait from supplier, lineitem l1, orders, nation where s_suppkey = l1.l_suppkey and o_orderkey = l1.l_orderkey and o_orderstatus = 'F' and l1.l_receiptdate > l1.l_commitdate and exists ( select andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 from lineitem l2 where l2.l_orderkey = l1.l_orderkey and l2.l_suppkey <> l1.l_suppkey ) and not exists ( select andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 from lineitem l3 where l3.l_orderkey = l1.l_orderkey and l3.l_suppkey <> l1.l_suppkey and l3.l_receiptdate > l3.l_commitdate ) and s_nationkey = n_nationkey and n_name = 'ROMANIA' group by s_name order by numwait desc, s_name LIMIT 100; COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ N=21
++ TASK=PERF.THRUPUT.QS4.Q21
++ record_start PERF.THRUPUT.QS4.Q21
++ NAME=PERF.THRUPUT.QS4.Q21
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q21
++ NAME=PERF.THRUPUT.QS4.Q21
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=3
++ [ 3 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 3
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)14.sql	2.1.8.1
+-- TPC-H/TPC-R Promotion Effect Query (Q14)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	100.00 * sum(case
+		when p_type like 'PROMO%'
+			then l_extendedprice * (1 - l_discount)
+		else 0
+	end) / sum(l_extendedprice * (1 - l_discount)) as promo_revenue
+from
+	lineitem,
+	part
+where
+	l_partkey = p_partkey
+	and l_shipdate >= date '1997-03-01'
+	and l_shipdate < cast(date '1997-03-01' + interval '1 month' as date);
+COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ echo -- using 1105021251 as a seed to the RNG -- @(#)14.sql 2.1.8.1 -- TPC-H/TPC-R Promotion Effect Query (Q14) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select 100.00 andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 sum(case when p_type like 'PROMO%' then l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount) else 0 end) / sum(l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount)) as promo_revenue from lineitem, part where l_partkey = p_partkey and l_shipdate >= date '1997-03-01' and l_shipdate < cast(date '1997-03-01' + interval '1 month' as date); COMMIT;
++ N=14
++ TASK=PERF.THRUPUT.QS4.Q14
++ record_start PERF.THRUPUT.QS4.Q14
++ NAME=PERF.THRUPUT.QS4.Q14
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q14
++ NAME=PERF.THRUPUT.QS4.Q14
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=4
++ [ 4 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 4
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)19.sql	2.1.8.1
+-- TPC-H/TPC-R Discounted Revenue Query (Q19)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	sum(l_extendedprice* (1 - l_discount)) as revenue
+from
+	lineitem,
+	part
+where
+	(
+		p_partkey = l_partkey
+		and p_brand = 'Brand#54'
+		and p_container in ('SM CASE', 'SM BOX', 'SM PACK', 'SM PKG')
+		and l_quantity >= 10 and l_quantity <= 10+10
+		and p_size between 1 and 5
+		and l_shipmode in ('AIR', 'AIR REG')
+		and l_shipinstruct = 'DELIVER IN PERSON'
+	)
+	or
+	(
+		p_partkey = l_partkey
+		and p_brand = 'Brand#44'
+		and p_container in ('MED BAG', 'MED BOX', 'MED PKG', 'MED PACK')
+		and l_quantity >= 16 and l_quantity <= 16+10
+		and p_size between 1 and 10
+		and l_shipmode in ('AIR', 'AIR REG')
+		and l_shipinstruct = 'DELIVER IN PERSON'
+	)
+	or
+	(
+		p_partkey = l_partkey
+		and p_brand = 'Brand#25'
+		and p_container in ('LG CASE', 'LG BOX', 'LG PACK', 'LG PKG')
+		and l_quantity >= 28 and l_quantity <= 28+10
+		and p_size between 1 and 15
+		and l_shipmode in ('AIR', 'AIR REG')
+		and l_shipinstruct = 'DELIVER IN PERSON'
+	);
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)19.sql 2.1.8.1 -- TPC-H/TPC-R Discounted Revenue Query (Q19) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select sum(l_extendedprice* (1 - l_discount)) as revenue from lineitem, part where ( p_partkey = l_partkey and p_brand = 'Brand#54' and p_container in ('SM CASE', 'SM BOX', 'SM PACK', 'SM PKG') and l_quantity >= 10 and l_quantity <= 10+10 and p_size between 1 and 5 and l_shipmode in ('AIR', 'AIR REG') and l_shipinstruct = 'DELIVER IN PERSON' ) or ( p_partkey = l_partkey and p_brand = 'Brand#44' and p_container in ('MED BAG', 'MED BOX', 'MED PKG', 'MED PACK') and l_quantity >= 16 and l_quantity <= 16+10 and p_size between 1 and 10 and l_shipmode in ('AIR', 'AIR REG') and l_shipinstruct = 'DELIVER IN PERSON' ) or ( p_partkey = l_partkey and p_brand = 'Brand#25' and p_container in ('LG CASE', 'LG BOX', 'LG PACK', 'LG PKG') and l_quantity >= 28 and l_quantity <= 28+10 and p_size between 1 and 15 and l_shipmode in ('AIR', 'AIR REG') and l_shipinstruct = 'DELIVER IN PERSON' ); COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ N=19
++ TASK=PERF.THRUPUT.QS4.Q19
++ record_start PERF.THRUPUT.QS4.Q19
++ NAME=PERF.THRUPUT.QS4.Q19
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q19
++ NAME=PERF.THRUPUT.QS4.Q19
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=5
++ [ 5 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 5
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)15.sql	2.1.8.1
+-- TPC-H/TPC-R Top Supplier Query (Q15)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+create or replace view revenue4 (supplier_no, total_revenue) as
+	select
+		l_suppkey,
+		sum(l_extendedprice * (1 - l_discount))
+	from
+		lineitem
+	where
+		l_shipdate >= '1994-06-01'
+		and l_shipdate < date'1994-06-01' + interval '90 days'
+	group by
+		l_suppkey;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	s_suppkey,
+	s_name,
+	s_address,
+	s_phone,
+	total_revenue
+from
+	supplier,
+	revenue4
+where
+	s_suppkey = supplier_no
+	and total_revenue = (
+		select
+			max(total_revenue)
+		from
+			revenue4
+	)
+order by
+	s_suppkey;
+
+drop view revenue4;
+COMMIT;
++ echo -- usingsed -n -r s/.*\(#\)([ to the RNG -- @(#)15.sql 2.1.8.1 -- TPC-H/TPC-R Top Supplier Query (Q15) -- Functional Query Definition -- Approved February 1998 BEGIN; create or replace view revenue4 (supplier_no, total_revenue) as select l_suppkey, sum(l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount)) from lineitem where l_shipdate >= '1994-06-01' and l_shipdate < date'1994-06-01' + interval '90 days' group by l_suppkey; EXPLAIN (ANALYZE, BUFFERS) select s_suppkey, s_name, s_address, s_phone, total_revenue from supplier, revenue4 where s_suppkey = supplier_no and total_revenue = ( select max(total_revenue) from revenue4 ) order by s_suppkey; drop view revenue4; COMMIT;
++ N=15
++ TASK=PERF.THRUPUT.QS4.Q15
++ record_start PERF.THRUPUT.QS4.Q15
++ NAME=PERF.THRUPUT.QS4.Q15
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q15
++ NAME=PERF.THRUPUT.QS4.Q15
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=6
++ [ 6 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 6
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)17.sql	2.1.8.1
+-- TPC-H/TPC-R Small-Quantity-Order Revenue Query (Q17)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	sum(l_extendedprice) / 7.0 as avg_yearly
+from
+	lineitem,
+	part
+where
+	p_partkey = l_partkey
+	and p_brand = 'Brand#21'
+	and p_container = 'WRAP PACK'
+	and l_quantity < (
+		select
+			0.2 * avg(l_quantity)
+		from
+			lineitem
+		where
+			l_partkey = p_partkey
+	);
+COMMIT;
++ sed -n -r s/. -- using 1105021251 as a seed to the RNG -- @(#)17.sql 2.1.8.1 -- TPC-H/TPC-R Small-Quantity-Order Revenue Query (Q17) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select sum(l_extendedprice) / 7.0 as avg_yearly from lineitem, part where p_partkey = l_partkey and p_brand = 'Brand#21' and p_container = 'WRAP PACK' and l_quantity < ( select 0.2 andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 avg(l_quantity) from lineitem where l_partkey = p_partkey ); COMMIT;
++ N=17
++ TASK=PERF.THRUPUT.QS4.Q17
++ record_start PERF.THRUPUT.QS4.Q17
++ NAME=PERF.THRUPUT.QS4.Q17
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q17
++ NAME=PERF.THRUPUT.QS4.Q17
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=7
++ [ 7 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 7
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)12.sql	2.1.8.1
+-- TPC-H/TPC-R Shipping Modes and Order Priority Query (Q12)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	l_shipmode,
+	sum(case
+		when o_orderpriority = '1-URGENT'
+			or o_orderpriority = '2-HIGH'
+			then 1
+		else 0
+	end) as high_line_count,
+	sum(case
+		when o_orderpriority <> '1-URGENT'
+			and o_orderpriority <> '2-HIGH'
+			then 1
+		else 0
+	end) as low_line_count
+from
+	orders,
+	lineitem
+where
+	o_orderkey = l_orderkey
+	and l_shipmode in ('RAIL', 'FOB')
+	and l_commitdate < l_receiptdate
+	and l_shipdate < l_commitdate
+	and l_receiptdate >= date '1997-01-01'
+	and l_receiptdate < date '1997-01-01' + interval '1 year'
+group by
+	l_shipmode
+order by
+	l_shipmode;
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)12.sql 2.1.8.1 -- TPC-H/TPC-R Shipping Modes and Order Priority Query (Q12) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select l_shipmode, sum(case when o_orderpriority = '1-URGENT' or o_orderpriority+  '2-HIGH' then 1 else 0 end)sed -n -rline_count, sum(case when o_orderpriority <> '1-URGENT' and o_orderpriority <> '2-HIGH' then 1 else 0 end) as low_line_count from orders, lineitem where o_orderkey = l_orderkey and l_shipmode in ('RAIL', 'FOB') and l_commitdate < l_receiptdate and l_shipdate < l_commitdate and l_receiptdate >= date '1997-01-01' and l_receiptdate < date '1997-01-01' + interval '1 year' group by l_shipmode order by l_shipmode; COMMIT;
++ N=12
++ TASK=PERF.THRUPUT.QS4.Q12
++ record_start PERF.THRUPUT.QS4.Q12
++ NAME=PERF.THRUPUT.QS4.Q12
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q12
++ NAME=PERF.THRUPUT.QS4.Q12
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=8
++ [ 8 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 8
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)6.sql	2.1.8.1
+-- TPC-H/TPC-R Forecasting Revenue Change Query (Q6)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	sum(l_extendedprice * l_discount) as revenue
+from
+	lineitem
+where
+	l_shipdate >= date '1996-01-01'
+	and l_shipdate < cast(date '1996-01-01' + interval '1 year' as date)
+	and l_discount between 0.07 - 0.01 and 0.07 + 0.01
+	and l_quantity < 24;
+COMMIT;
++ sed -n -r s/. -- using 1105021251 as a seed to the RNG -- @(#)6.sql 2.1.8.1 -- TPC-H/TPC-R Forecasting Revenue Change Query (Q6) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select sum(l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 l_discount) as revenue from lineitem where l_shipdate >= date '1996-01-01' and l_shipdate < cast(date '1996-01-01' + interval '1 year' as date) and l_discount between 0.07 - 0.01 and 0.07 + 0.01 and l_quantity < 24; COMMIT;
++ N=6
++ TASK=PERF.THRUPUT.QS4.Q6
++ record_start PERF.THRUPUT.QS4.Q6
++ NAME=PERF.THRUPUT.QS4.Q6
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q6
++ NAME=PERF.THRUPUT.QS4.Q6
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=9
++ [ 9 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 9
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)4.sql	2.1.8.1
+-- TPC-H/TPC-R Order Priority Checking Query (Q4)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	o_orderpriority,
+	count(*) as order_count
+from
+	orders
+where
+	o_orderdate >= date '1993-11-01'
+	and o_orderdate < cast(date '1993-11-01' + interval '3 month' as date)
+	and exists (
+		select
+			*
+		from
+			lineitem
+		where
+			l_orderkey = o_orderkey
+			and l_commitdate < l_receiptdate
+	)
+group by
+	o_orderpriority
+order by
+	o_orderpriority;
+COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ echo -- using 1105021251 as a seed to the RNG -- @(#)4.sql 2.1.8.1 -- TPC-H/TPC-R Order Priority Checking Query (Q4) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select o_orderpriority, count(*) as order_count from orders where o_orderdate >= date '1993-11-01' and o_orderdate < cast(date '1993-11-01' + interval '3 month' as date) and exists ( select andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 from lineitem where l_orderkey = o_orderkey and l_commitdate < l_receiptdate ) group by o_orderpriority order by o_orderpriority; COMMIT;
++ N=4
++ TASK=PERF.THRUPUT.QS4.Q4
++ record_start PERF.THRUPUT.QS4.Q4
++ NAME=PERF.THRUPUT.QS4.Q4
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q4
++ NAME=PERF.THRUPUT.QS4.Q4
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=10
++ [ 10 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 10
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)9.sql	2.1.8.1
+-- TPC-H/TPC-R Product Type Profit Measure Query (Q9)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	nation,
+	o_year,
+	sum(amount) as sum_profit
+from
+	(
+		select
+			n_name as nation,
+			extract(year from o_orderdate) as o_year,
+			l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity as amount
+		from
+			part,
+			supplier,
+			lineitem,
+			partsupp,
+			orders,
+			nation
+		where
+			s_suppkey = l_suppkey
+			and ps_suppkey = l_suppkey
+			and ps_partkey = l_partkey
+			and p_partkey = l_partkey
+			and o_orderkey = l_orderkey
+			and s_nationkey = n_nationkey
+			and p_name like '%chocolate%'
+	) as profit
+group by
+	nation,
+	o_year
+order by
+	nation,
+	o_year desc;
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)9.sql 2.1.8.1 -- TPC-H/TPC-R Product Type Profit Measure Query (Q9) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select nation, o_year, sum(amount) as sum_profit from ( select n_name as nation, extract(year from o_orderdate) as o_year, l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount) - ps_supplycost andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 l_quantity as amount from part, supplier, lineitem, partsupp, orders, nation where s_suppkey = l_suppkey and ps_suppkey = l_suppkey and ps_partkey = l_partkey and p_partkey = l_partkey and o_orderkey = l_orderkey and s_nationkey = n_nationkey and p_name like '%chocolate%' ) as profit group by nation, o_year order by nation, o_year desc; COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ N=9
++ TASK=PERF.THRUPUT.QS4.Q9
++ record_start PERF.THRUPUT.QS4.Q9
++ NAME=PERF.THRUPUT.QS4.Q9
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q9
++ NAME=PERF.THRUPUT.QS4.Q9
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=11
++ [ 11 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 11
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)8.sql	2.1.8.1
+-- TPC-H/TPC-R National Market Share Query (Q8)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	o_year,
+	sum(case
+		when nation = 'EGYPT' then volume
+		else 0
+	end) / sum(volume) as mkt_share
+from
+	(
+		select
+			extract(year from o_orderdate) as o_year,
+			l_extendedprice * (1 - l_discount) as volume,
+			n2.n_name as nation
+		from
+			part,
+			supplier,
+			lineitem,
+			orders,
+			customer,
+			nation n1,
+			nation n2,
+			region
+		where
+			p_partkey = l_partkey
+			and s_suppkey = l_suppkey
+			and l_orderkey = o_orderkey
+			and o_custkey = c_custkey
+			and c_nationkey = n1.n_nationkey
+			and n1.n_regionkey = r_regionkey
+			and r_name = 'MIDDLE EAST'
+			and s_nationkey = n2.n_nationkey
+			and o_orderdate between date '1995-01-01' and date '1996-12-31'
+			and p_type = 'SMALL ANODIZED NICKEL'
+	) as all_nations
+group by
+	o_year
+order by
+	o_year;
+COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ echo -- using 1105021251 as a seed to the RNG -- @(#)8.sql 2.1.8.1 -- TPC-H/TPC-R National Market Share Query (Q8) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select o_year, sum(case when nation = 'EGYPT' then volume else 0 end) / sum(volume) as mkt_share from ( select extract(year from o_orderdate) as o_year, l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount) as volume, n2.n_name as nation from part, supplier, lineitem, orders, customer, nation n1, nation n2, region where p_partkey = l_partkey and s_suppkey = l_suppkey and l_orderkey = o_orderkey and o_custkey = c_custkey and c_nationkey = n1.n_nationkey and n1.n_regionkey = r_regionkey and r_name = 'MIDDLE EAST' and s_nationkey = n2.n_nationkey and o_orderdate between date '1995-01-01' and date '1996-12-31' and p_type = 'SMALL ANODIZED NICKEL' ) as all_nations group by o_year order by o_year; COMMIT;
++ N=8
++ TASK=PERF.THRUPUT.QS4.Q8
++ record_start PERF.THRUPUT.QS4.Q8
++ NAME=PERF.THRUPUT.QS4.Q8
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q8
++ NAME=PERF.THRUPUT.QS4.Q8
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=12
++ [ 12 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 12
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)16.sql	2.1.8.1
+-- TPC-H/TPC-R Parts/Supplier Relationship Query (Q16)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	p_brand,
+	p_type,
+	p_size,
+	count(distinct ps_suppkey) as supplier_cnt
+from
+	partsupp,
+	part
+where
+	p_partkey = ps_partkey
+	and p_brand <> 'Brand#12'
+	and p_type not like 'STANDARD BURNISHED%'
+	and p_size in (47, 39, 2, 36, 22, 46, 50, 35)
+	and ps_suppkey not in (
+		select
+			s_suppkey
+		from
+			supplier
+		where
+			s_comment like '%Customer%Complaints%'
+	)
+group by
+	p_brand,
+	p_type,
+	p_size
+order by
+	supplier_cnt desc,
+	p_brand,
+	p_type,
+	p_size;
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)16.sql 2.1.8.1 -- TPC-H/TPC-R Parts/Supplier Relationship Query (Q16) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select p_brand, p_type, p_size, count(distinct ps_suppkey) as supplier_cnt+ rom partsupp, part wheresed -n -r s/.*\(#\)([[:digi p_brand <> 'Brand#12' and p_type not like 'STANDARD BURNISHED%' and p_size in (47, 39, 2, 36, 22, 46, 50, 35) and ps_suppkey not in ( select s_suppkey from supplier where s_comment like '%Customer%Complaints%' ) group by p_brand, p_type, p_size order by supplier_cnt desc, p_brand, p_type, p_size; COMMIT;
++ N=16
++ TASK=PERF.THRUPUT.QS4.Q16
++ record_start PERF.THRUPUT.QS4.Q16
++ NAME=PERF.THRUPUT.QS4.Q16
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q16
++ NAME=PERF.THRUPUT.QS4.Q16
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=13
++ [ 13 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 13
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)11.sql	2.1.8.1
+-- TPC-H/TPC-R Important Stock Identification Query (Q11)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	ps_partkey,
+	sum(ps_supplycost * ps_availqty) as value
+from
+	partsupp,
+	supplier,
+	nation
+where
+	ps_suppkey = s_suppkey
+	and s_nationkey = n_nationkey
+	and n_name = 'FRANCE'
+group by
+	ps_partkey having
+		sum(ps_supplycost * ps_availqty) > (
+			select
+				sum(ps_supplycost * ps_availqty) * 0.0000100000
+			from
+				partsupp,
+				supplier,
+				nation
+			where
+				ps_suppkey = s_suppkey
+				and s_nationkey = n_nationkey
+				and n_name = 'FRANCE'
+		)
+order by
+	value desc;
+COMMIT;
++ + sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
+echo -- using 1105021251 as a seed to the RNG -- @(#)11.sql 2.1.8.1 -- TPC-H/TPC-R Important Stock Identification Query (Q11) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select ps_partkey, sum(ps_supplycost andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 ps_availqty) as value from partsupp, supplier, nation where ps_suppkey = s_suppkey and s_nationkey = n_nationkey and n_name = 'FRANCE' group by ps_partkey having sum(ps_supplycost andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 ps_availqty) > ( select sum(ps_supplycost andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 ps_availqty) andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 0.0000100000 from partsupp, supplier, nation where ps_suppkey = s_suppkey and s_nationkey = n_nationkey and n_name = 'FRANCE' ) order by value desc; COMMIT;
++ N=11
++ TASK=PERF.THRUPUT.QS4.Q11
++ record_start PERF.THRUPUT.QS4.Q11
++ NAME=PERF.THRUPUT.QS4.Q11
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q11
++ NAME=PERF.THRUPUT.QS4.Q11
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=14
++ [ 14 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 14
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)2.sql	2.1.8.2
+-- TPC-H/TPC-R Minimum Cost Supplier Query (Q2)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	s_acctbal,
+	s_name,
+	n_name,
+	p_partkey,
+	p_mfgr,
+	s_address,
+	s_phone,
+	s_comment
+from
+	part,
+	supplier,
+	partsupp,
+	nation,
+	region
+where
+	p_partkey = ps_partkey
+	and s_suppkey = ps_suppkey
+	and p_size = 20
+	and p_type like '%BRASS'
+	and s_nationkey = n_nationkey
+	and n_regionkey = r_regionkey
+	and r_name = 'AFRICA'
+	and ps_supplycost = (
+		select
+			min(ps_supplycost)
+		from
+			partsupp,
+			supplier,
+			nation,
+			region
+		where
+			p_partkey = ps_partkey
+			and s_suppkey = ps_suppkey
+			and s_nationkey = n_nationkey
+			and n_regionkey = r_regionkey
+			and r_name = 'AFRICA'
+	)
+order by
+	s_acctbal desc,
+	n_name,
+	s_name,
+	p_partkey
+LIMIT 100;
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)2.sql 2.1.8.2 -- TPC-H/TPC-R Minimum Cost Supplier Query (Q2) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select s_acctbal, s_name, n_name, p_partkey, p_mfgr, s_address, s_phone, s_comment from part, supplier, partsupp, nation, region where p_partkey = ps_partkey and s_suppkey = ps_suppkey and p_size = 20 and p_type like '%BRASS' and s_nationkey = n_nationkey and n_regionkey = r_regionkey and r_name = 'AFRICA' and ps_supplycost = ( select min(ps_supplycost) from partsupp, supplier, nation, region where p_partkey = ps_partkey and s_suppkey = ps_suppkey and s_nationkey = n_nationkey and n_regionkey = r_regionkey and r_name = 'AFRICA' ) order by s_acctbal desc, n_name, s_name, p_partkey LIMIT 100; COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ N=2
++ TASK=PERF.THRUPUT.QS4.Q2
++ record_start PERF.THRUPUT.QS4.Q2
++ NAME=PERF.THRUPUT.QS4.Q2
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q2
++ NAME=PERF.THRUPUT.QS4.Q2
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=15
++ [ 15 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 15
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)10.sql	2.1.8.1
+-- TPC-H/TPC-R Returned Item Reporting Query (Q10)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	c_custkey,
+	c_name,
+	sum(l_extendedprice * (1 - l_discount)) as revenue,
+	c_acctbal,
+	n_name,
+	c_address,
+	c_phone,
+	c_comment
+from
+	customer,
+	orders,
+	lineitem,
+	nation
+where
+	c_custkey = o_custkey
+	and l_orderkey = o_orderkey
+	and o_orderdate >= date '1993-12-01'
+	and o_orderdate < cast(date '1993-12-01' + interval '3 month' as date)
+	and l_returnflag = 'R'
+	and c_nationkey = n_nationkey
+group by
+	c_custkey,
+	c_name,
+	c_acctbal,
+	c_phone,
+	n_name,
+	c_address,
+	c_comment
+order by
+	revenue desc
+LIMIT 20;
+COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ echo -- using 1105021251 as a seed to the RNG -- @(#)10.sql 2.1.8.1 -- TPC-H/TPC-R Returned Item Reporting Query (Q10) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select c_custkey, c_name, sum(l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount)) as revenue, c_acctbal, n_name, c_address, c_phone, c_comment from customer, orders, lineitem, nation where c_custkey = o_custkey and l_orderkey = o_orderkey and o_orderdate >= date '1993-12-01' and o_orderdate < cast(date '1993-12-01' + interval '3 month' as date) and l_returnflag = 'R' and c_nationkey = n_nationkey group by c_custkey, c_name, c_acctbal, c_phone, n_name, c_address, c_comment order by revenue desc LIMIT 20; COMMIT;
++ N=10
++ TASK=PERF.THRUPUT.QS4.Q10
++ record_start PERF.THRUPUT.QS4.Q10
++ NAME=PERF.THRUPUT.QS4.Q10
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q10
++ NAME=PERF.THRUPUT.QS4.Q10
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=16
++ [ 16 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 16
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)18.sql	2.1.8.1
+-- TPC-H/TPC-R Large Volume Customer Query (Q18)
+-- Function Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	c_name,
+	c_custkey,
+	o_orderkey,
+	o_orderdate,
+	o_totalprice,
+	sum(l_quantity)
+from
+	customer,
+	orders,
+	lineitem
+where
+	o_orderkey in (
+		select
+			l_orderkey
+		from
+			lineitem
+		group by
+			l_orderkey having
+				sum(l_quantity) > 312
+	)
+	and c_custkey = o_custkey
+	and o_orderkey = l_orderkey
+group by
+	c_name,
+	c_custkey,
+	o_orderkey,
+	o_orderdate,
+	o_totalprice
+order by
+	o_totalprice desc,
+	o_orderdate
+LIMIT 100;
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)18.sql 2.1.8.1 -- TPC-H/TPC-R Large Volume Customer Query (Q18) -- Function Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select c_name, c_custkey, o_orderkey, o_orderdate, o_totalprice, sum(l_quantity) from customer, orders, lineitem where o_orderkey in ( select l_orderkey from lineitem group by l_orderkey having sum(l_quantity) > 312 ) and c_custkey =+ _custkey and o_orderkey = l_orderkey groupsed -n -re, c_custkey, o_orderkey, o_orderdate, o_totalprice order by o_totalprice desc, o_orderdate LIMIT 100; COMMIT;
++ N=18
++ TASK=PERF.THRUPUT.QS4.Q18
++ record_start PERF.THRUPUT.QS4.Q18
++ NAME=PERF.THRUPUT.QS4.Q18
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q18
++ NAME=PERF.THRUPUT.QS4.Q18
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=17
++ [ 17 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 17
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)1.sql	2.1.8.1
+-- TPC-H/TPC-R Pricing Summary Report Query (Q1)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	l_returnflag,
+	l_linestatus,
+	sum(l_quantity) as sum_qty,
+	sum(l_extendedprice) as sum_base_price,
+	sum(l_extendedprice * (1 - l_discount)) as sum_disc_price,
+	sum(l_extendedprice * (1 - l_discount) * (1 + l_tax)) as sum_charge,
+	avg(l_quantity) as avg_qty,
+	avg(l_extendedprice) as avg_price,
+	avg(l_discount) as avg_disc,
+	count(*) as count_order
+from
+	lineitem
+where
+	l_shipdate <= date '1998-12-01' - interval '72 days'
+group by
+	l_returnflag,
+	l_linestatus
+order by
+	l_returnflag,
+	l_linestatus;
+COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ echo -- using 1105021251 as a seed to the RNG -- @(#)1.sql 2.1.8.1 -- TPC-H/TPC-R Pricing Summary Report Query (Q1) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select l_returnflag, l_linestatus, sum(l_quantity) as sum_qty, sum(l_extendedprice) as sum_base_price, sum(l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount)) as sum_disc_price, sum(l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount) andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 + l_tax)) as sum_charge, avg(l_quantity) as avg_qty, avg(l_extendedprice) as avg_price, avg(l_discount) as avg_disc, count(*) as count_order from lineitem where l_shipdate <= date '1998-12-01' - interval '72 days' group by l_returnflag, l_linestatus order by l_returnflag, l_linestatus; COMMIT;
++ N=1
++ TASK=PERF.THRUPUT.QS4.Q1
++ record_start PERF.THRUPUT.QS4.Q1
++ NAME=PERF.THRUPUT.QS4.Q1
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q1
++ NAME=PERF.THRUPUT.QS4.Q1
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=18
++ [ 18 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 18
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)13.sql	2.1.8.1
+-- TPC-H/TPC-R Customer Distribution Query (Q13)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	c_count,
+	count(*) as custdist
+from
+	(
+		select
+			c_custkey,
+			count(o_orderkey)
+		from
+			customer left outer join orders on
+				c_custkey = o_custkey
+				and o_comment not like '%express%deposits%'
+		group by
+			c_custkey
+	) as c_orders (c_custkey, c_count)
+group by
+	c_count
+order by
+	custdist desc,
+	c_count desc;
+COMMIT;
++ sed -n -r using 1105021251 as a seed to the RNG -- @(#)13.sql 2.1.8.1 -- TPC-H/TPC-R Customer Distribution Query (Q13) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select c_count, count(*) as custdist from ( select c_custkey, count(o_orderkey) from customer left outer join orders on c_custkey = o_custkey and o_comment not like '%express%deposits%' group by c_custkey ) as c_orders (c_custkey, c_count) group by c_count order by custdist desc, c_count desc; COMMIT;
++ N=13
++ TASK=PERF.THRUPUT.QS4.Q13
++ record_start PERF.THRUPUT.QS4.Q13
++ NAME=PERF.THRUPUT.QS4.Q13
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q13
++ NAME=PERF.THRUPUT.QS4.Q13
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=19
++ [ 19 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 19
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)7.sql	2.1.8.1
+-- TPC-H/TPC-R Volume Shipping Query (Q7)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	supp_nation,
+	cust_nation,
+	l_year,
+	sum(volume) as revenue
+from
+	(
+		select
+			n1.n_name as supp_nation,
+			n2.n_name as cust_nation,
+			extract(year from l_shipdate) as l_year,
+			l_extendedprice * (1 - l_discount) as volume
+		from
+			supplier,
+			lineitem,
+			orders,
+			customer,
+			nation n1,
+			nation n2
+		where
+			s_suppkey = l_suppkey
+			and o_orderkey = l_orderkey
+			and c_custkey = o_custkey
+			and s_nationkey = n1.n_nationkey
+			and c_nationkey = n2.n_nationkey
+			and (
+				(n1.n_name = 'PERU' and n2.n_name = 'EGYPT')
+				or (n1.n_name = 'EGYPT' and n2.n_name = 'PERU')
+			)
+			and l_shipdate between date '1995-01-01' and date '1996-12-31'
+	) as shipping
+group by
+	supp_nation,
+	cust_nation,
+	l_year
+order by
+	supp_nation,
+	cust_nation,
+	l_year;
+COMMIT;
++ + sed -nech  -- using 1105021251 as a seed to the RNG -- @(#)7.sql 2.1.8.1 -- TPC-H/TPC-R Volume Shipping Query (Q7) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select supp_nation, cust_nation, l_year, sum(volume) as revenue from ( select n1.n_name as supp_nation, n2.n_name as cust_nation, extract(year from l_shipdate) as l_year, l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount) as volume from supplier, lineitem, orders, customer, nation n1, nation n2 where s_suppkey = l_suppkey and o_orderkey = l_orderkey and c_custkey = o_custkey and s_nationkey = n1.n_nationkey and c_nationkey = n2.n_nationkey and ( (n1.n_name = 'PERU' and n2.n_name = 'EGYPT') or (n1.n_name = 'EGYPT' and n2.n_name = 'PERU') ) and l_shipdate between date '1995-01-01' and date '1996-12-31' ) as shipping group by supp_nation, cust_nation, l_year order by supp_nation, cust_nation, l_year; COMMIT;
++ N=7
++ TASK=PERF.THRUPUT.QS4.Q7
++ record_start PERF.THRUPUT.QS4.Q7
++ NAME=PERF.THRUPUT.QS4.Q7
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q7
++ NAME=PERF.THRUPUT.QS4.Q7
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=20
++ [ 20 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 20
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)22.sql	2.1.8.1
+-- TPC-H/TPC-R Global Sales Opportunity Query (Q22)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	cntrycode,
+	count(*) as numcust,
+	sum(c_acctbal) as totacctbal
+from
+	(
+		select
+			substr(c_phone, 1, 2) as cntrycode,
+			c_acctbal
+		from
+			customer
+		where
+			substr(c_phone, 1, 2) in
+				('27', '20', '32', '34', '10', '30', '29')
+			and c_acctbal > (
+				select
+					avg(c_acctbal)
+				from
+					customer
+				where
+					c_acctbal > 0.00
+					and substr(c_phone, 1, 2) in
+						('27', '20', '32', '34', '10', '30', '29')
+			)
+			and not exists (
+				select
+					*
+				from
+					orders
+				where
+					o_custkey = c_custkey
+			)
+	) as vip
+group by
+	cntrycode
+order by
+	cntrycode;
+COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ echo -- using 1105021251 as a seed to the RNG -- @(#)22.sql 2.1.8.1 -- TPC-H/TPC-R Global Sales Opportunity Query (Q22) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select cntrycode, count(*) as numcust, sum(c_acctbal) as totacctbal from ( select substr(c_phone, 1, 2) as cntrycode, c_acctbal from customer where substr(c_phone, 1, 2) in ('27', '20', '32', '34', '10', '30', '29') and c_acctbal > ( select avg(c_acctbal) from customer where c_acctbal > 0.00 and substr(c_phone, 1, 2) in ('27', '20', '32', '34', '10', '30', '29') ) and not exists ( select andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 from orders where o_custkey = c_custkey ) ) as vip group by cntrycode order by cntrycode; COMMIT;
++ N=22
++ TASK=PERF.THRUPUT.QS4.Q22
++ record_start PERF.THRUPUT.QS4.Q22
++ NAME=PERF.THRUPUT.QS4.Q22
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q22
++ NAME=PERF.THRUPUT.QS4.Q22
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=21
++ [ 21 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 21
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)3.sql	2.1.8.1
+-- TPC-H/TPC-R Shipping Priority Query (Q3)
+-- Functional Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	l_orderkey,
+	sum(l_extendedprice * (1 - l_discount)) as revenue,
+	o_orderdate,
+	o_shippriority
+from
+	customer,
+	orders,
+	lineitem
+where
+	c_mktsegment = 'FURNITURE'
+	and c_custkey = o_custkey
+	and l_orderkey = o_orderkey
+	and o_orderdate < date '1995-03-06'
+	and l_shipdate > date '1995-03-06'
+group by
+	l_orderkey,
+	o_orderdate,
+	o_shippriority
+order by
+	revenue desc,
+	o_orderdate
+LIMIT 10;
+COMMIT;
++ echo -- using 1105021251 as a seed to the RNG -- @(#)3.sql 2.1.8.1 -- TPC-H/TPC-R Shipping Priority Query (Q3) -- Functional Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select l_orderkey, sum(l_extendedprice andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 (1 - l_discount)) as revenue, o_orderdate, o_shippriority from customer, orders, lineitem where c_mktsegment = 'FURNITURE' and c_custkey = o_custkey and l_orderkey = o_orderkey and o_orderdate < date '1995-03-06' and l_shipdate > date '1995-03-06' group by l_orderkey, o_orderdate, o_shippriority order by revenue desc, o_orderdate LIMIT 10; COMMIT;
++ sed -n -r s/.*\(#\)([[:digit:]]+)\..*/\1/p
++ N=3
++ TASK=PERF.THRUPUT.QS4.Q3
++ record_start PERF.THRUPUT.QS4.Q3
++ NAME=PERF.THRUPUT.QS4.Q3
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q3
++ NAME=PERF.THRUPUT.QS4.Q3
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=22
++ [ 22 -le 22 ]
++ /home/sekondquad/dbt3/src/dbgen/qgen -c -r 1105021251 -p 4 -s 10 -y 22
++ Q=-- using 1105021251 as a seed to the RNG
+-- @(#)20.sql	2.1.8.1
+-- TPC-H/TPC-R Potential Part Promotion Query (Q20)
+-- Function Query Definition
+-- Approved February 1998
+BEGIN;
+
+EXPLAIN (ANALYZE, BUFFERS)
+
+
+select
+	s_name,
+	s_address
+from
+	supplier,
+	nation
+where
+	s_suppkey in (
+		select
+			distinct (ps_suppkey)
+		from
+			partsupp,
+			part
+		where
+			ps_partkey=p_partkey
+			and p_name like 'rose%'
+			and ps_availqty > (
+				select
+					0.5 * sum(l_quantity)
+				from
+					lineitem
+				where
+					l_partkey = ps_partkey
+					and l_suppkey = ps_suppkey
+					and l_shipdate >= '1996-01-01'
+					and l_shipdate < cast(date '1996-01-01' + interval '1 year' as date)
+			)
+	)
+	and s_nationkey = n_nationkey
+	and n_name = 'PERU'
+order by
+	s_name;
+COMMIT;
++ sed -n -r s/.*\(#\)([[:d as a seed to the RNG -- @(#)20.sql 2.1.8.1 -- TPC-H/TPC-R Potential Part Promotion Query (Q20) -- Function Query Definition -- Approved February 1998 BEGIN; EXPLAIN (ANALYZE, BUFFERS) select s_name, s_address from supplier, nation where s_suppkey in ( select distinct (ps_suppkey) from partsupp, part where ps_partkey=p_partkey and p_name like 'rose%' and ps_availqty > ( select 0.5 andres_btree_30G_1 andres_btree_30G_2 andres_btree_30G_3 andres_btree_30G_4 andres_btree_30G_5 andres_btree_30G_6 baseline-90209-1 brin_30G_1 brinv20-brin-load30g1 brinv20-btree-load brinv20-btree-load2 brinv20-btree-load3 brinv20-btree-load4 brinv20-btree-power brinv20-btree-power2 brinv20-btree-power3 brinv20-btree-power4 brinv20-btree-power5 brinv20_30G_1 brinv20_30G_2 brinv20_30G_3 brinv20_30G_4 brinv20r1 brinv20r2 brinv20r3 btree1 btree2 btree3 btree4 btree5 btree6 btree_30G_1 btree_30G_2 btree_30G_3 btree_30G_4 btree_30G_5 btree_30G_6 btree_30G_7 btree_30G_8 dbt3.log hash-baseline hash-no-nestloop hash-no-nestloop2 load-pg-head-hash pghead-andres-1 pghead-andres-2 pghead-andres-3 pghead-andres-4 pghead-andres-5 pghead-andres-6 pghead-andres-7 pghead-andres-8 pghead-andres-9 sum(l_quantity) from lineitem where l_partkey = ps_partkey and l_suppkey = ps_suppkey and l_shipdate >= '1996-01-01' and l_shipdate < cast(date '1996-01-01' + interval '1 year' as date) ) ) and s_nationkey = n_nationkey and n_name = 'PERU' order by s_name; COMMIT;
++ N=20
++ TASK=PERF.THRUPUT.QS4.Q20
++ record_start PERF.THRUPUT.QS4.Q20
++ NAME=PERF.THRUPUT.QS4.Q20
++ psql -v ON_ERROR_STOP=1 -X -q
++ psql -v ON_ERROR_STOP=1 -X -e
++ record_end PERF.THRUPUT.QS4.Q20
++ NAME=PERF.THRUPUT.QS4.Q20
++ psql -v ON_ERROR_STOP=1 -X -q
++ i=23
++ [ 23 -le 22 ]
++ record_end PERF.THRUPUT.QS4.ALL
++ NAME=PERF.THRUPUT.QS4.ALL
++ psql -v ON_ERROR_STOP=1 -X -q
++ date +%s
++ e_time=1415155403
++ date
++ echo Wed Nov  5 02:43:23 UTC 2014: end throughput query stream 4
+Wed Nov  5 02:43:23 UTC 2014: end throughput query stream 4
++ diff_time=613
++ echo elapsed time for throughput query stream 4: 613 sec
+elapsed time for throughput query stream 4: 613 sec

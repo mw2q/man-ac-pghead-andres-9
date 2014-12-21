@@ -1,0 +1,15 @@
+node: axle
+kernel: Linux 3.11.0-17-generic
+distribution: fixme
+dbver: PostgreSQL 9.5devel
+sysstat: 10.0.3
+CPUS: 64
+MHz:  1200.000
+model:  Intel(R) Xeon(R) CPU E5-4620 0 @ 2.20GHz
+memory:        264119556 kB
+scale_factor: 10
+num_stream: 18
+load_parameters: 
+power_parameters: 
+throughput_parameters: 
+shmmax: 1099511627776

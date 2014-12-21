@@ -1,0 +1,80 @@
+BEGIN;
+BEGIN
+EXPLAIN (ANALYZE, BUFFERS)
+select
+	cntrycode,
+	count(*) as numcust,
+	sum(c_acctbal) as totacctbal
+from
+	(
+		select
+			substr(c_phone, 1, 2) as cntrycode,
+			c_acctbal
+		from
+			customer
+		where
+			substr(c_phone, 1, 2) in
+				('29', '24', '13', '20', '10', '27', '14')
+			and c_acctbal > (
+				select
+					avg(c_acctbal)
+				from
+					customer
+				where
+					c_acctbal > 0.00
+					and substr(c_phone, 1, 2) in
+						('29', '24', '13', '20', '10', '27', '14')
+			)
+			and not exists (
+				select
+					*
+				from
+					orders
+				where
+					o_custkey = c_custkey
+			)
+	) as vip
+group by
+	cntrycode
+order by
+	cntrycode;
+                                                                             QUERY PLAN                                                                             
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=693425.47..693425.48 rows=3 width=20) (actual time=10780.552..10780.553 rows=7 loops=1)
+   Sort Key: (substr((customer.c_phone)::text, 1, 2))
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=163852 read=162730 written=60
+   InitPlan 1 (returns $0)
+     ->  Aggregate  (cost=52844.85..52844.86 rows=1 width=4) (actual time=726.141..726.141 rows=1 loops=1)
+           Buffers: shared hit=9 read=36330
+           ->  Bitmap Heap Scan on customer customer_1  (cost=6634.08..51894.17 rows=380270 width=4) (actual time=86.232..656.376 rows=380956 loops=1)
+                 Recheck Cond: ((substr((c_phone)::text, 1, 2) = ANY ('{29,24,13,20,10,27,14}'::text[])) AND (c_acctbal > 0::double precision))
+                 Heap Blocks: exact=35278
+                 Buffers: shared hit=9 read=36330
+                 ->  Bitmap Index Scan on customer_c_phone_idx_c_acctbal  (cost=0.00..6539.01 rows=380270 width=0) (actual time=77.913..77.913 rows=380956 loops=1)
+                       Index Cond: (substr((c_phone)::text, 1, 2) = ANY ('{29,24,13,20,10,27,14}'::text[]))
+                       Buffers: shared hit=7 read=1054
+   ->  HashAggregate  (cost=640580.55..640580.59 rows=3 width=20) (actual time=10780.499..10780.500 rows=7 loops=1)
+         Group Key: substr((customer.c_phone)::text, 1, 2)
+         Buffers: shared hit=163849 read=162730 written=60
+         ->  Hash Anti Join  (cost=596625.04..640141.36 rows=58558 width=20) (actual time=10116.051..10756.742 rows=63559 loops=1)
+               Hash Cond: (customer.c_custkey = orders.o_custkey)
+               Buffers: shared hit=163849 read=162730 written=60
+               ->  Bitmap Heap Scan on customer  (cost=2905.34..41846.40 rows=139545 width=24) (actual time=786.022..1289.504 rows=190210 loops=1)
+                     Recheck Cond: ((substr((c_phone)::text, 1, 2) = ANY ('{29,24,13,20,10,27,14}'::text[])) AND (c_acctbal > $0))
+                     Heap Blocks: exact=35158
+                     Buffers: shared hit=21 read=72021
+                     ->  Bitmap Index Scan on customer_c_phone_idx  (cost=0.00..2870.45 rows=139545 width=0) (actual time=777.687..777.687 rows=190210 loops=1)
+                           Index Cond: ((substr((c_phone)::text, 1, 2) = ANY ('{29,24,13,20,10,27,14}'::text[])) AND (c_acctbal > $0))
+                           Buffers: shared hit=19 read=36865
+               ->  Hash  (cost=405283.20..405283.20 rows=15074920 width=4) (actual time=9231.547..9231.547 rows=15015000 loops=1)
+                     Buckets: 16777216  Batches: 1  Memory Usage: 658944kB
+                     Buffers: shared hit=163825 read=90709 written=60
+                     ->  Seq Scan on orders  (cost=0.00..405283.20 rows=15074920 width=4) (actual time=0.020..4636.970 rows=15015000 loops=1)
+                           Buffers: shared hit=163825 read=90709 written=60
+ Planning time: 2.898 ms
+ Execution time: 10800.787 ms
+(34 rows)
+
+COMMIT;
+COMMIT
